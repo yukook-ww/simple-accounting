@@ -1,289 +1,2197 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>簡易記帳</title>
-<style>
-:root{
-  --primary:#2563eb;
-  --primary-light:#eff6ff;
-  --danger:#dc2626;
-  --success:#16a34a;
-  --bg:#f5f7fb;
-  --card:#ffffff;
-  --text:#1f2937;
-  --muted:#6b7280;
-  --border:#e5e7eb;
-}
-*{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans TC",sans-serif;background:var(--bg);color:var(--text)}
-header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:5}
-.header-inner{max-width:1100px;margin:auto;padding:18px 20px;display:flex;justify-content:space-between;align-items:center}
-h1{font-size:24px;margin:0}
-.subtitle{font-size:13px;color:var(--muted);margin-top:4px}
-.container{max-width:1100px;margin:24px auto;padding:0 20px 40px}
-.month-bar{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:18px}
-.month-bar button,.icon-btn{border:1px solid var(--border);background:#fff;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:16px}
-.month-title{font-size:20px;font-weight:700;min-width:130px;text-align:center}
-.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
-.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.summary-label{color:var(--muted);font-size:14px}
-.summary-value{font-size:27px;font-weight:800;margin-top:8px}
-.income{color:var(--success)} .expense{color:var(--danger)}
-.balance{color:var(--primary)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.section-title{margin:0 0 16px;font-size:18px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.field{display:flex;flex-direction:column;gap:6px}
-.field.full{grid-column:1/-1}
-label{font-size:13px;color:var(--muted)}
-input,select,textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px;font:inherit;background:#fff}
-textarea{resize:vertical;min-height:68px}
-.actions{display:flex;gap:10px;margin-top:14px}
-button.primary{background:var(--primary);color:#fff;border:0;border-radius:8px;padding:11px 18px;font-weight:600;cursor:pointer}
-button.secondary{background:#fff;color:var(--text);border:1px solid var(--border);border-radius:8px;padding:11px 18px;cursor:pointer}
-.stats-list{display:flex;flex-direction:column;gap:12px}
-.stat-row{display:grid;grid-template-columns:90px 1fr auto;gap:10px;align-items:center;font-size:14px}
-.bar{height:9px;background:#eef2f7;border-radius:999px;overflow:hidden}
-.bar > div{height:100%;background:var(--primary);border-radius:999px}
-.records{margin-top:20px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:720px}
-th,td{padding:13px 10px;border-bottom:1px solid var(--border);text-align:left;font-size:14px}
-th{color:var(--muted);font-weight:600;background:#fafafa}
-.badge{display:inline-block;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:600}
-.badge.in{background:#ecfdf5;color:#15803d}.badge.out{background:#fef2f2;color:#b91c1c}
-.money-in{color:var(--success);font-weight:700}.money-out{color:var(--danger);font-weight:700}
-.row-actions{display:flex;gap:7px}
-.small-btn{padding:6px 9px;border:1px solid var(--border);background:#fff;border-radius:6px;cursor:pointer}
-.empty{color:var(--muted);text-align:center;padding:30px}
-.footer-note{font-size:12px;color:var(--muted);text-align:center;margin-top:20px}
-@media(max-width:760px){
-  .container{padding:0 12px 30px;margin-top:16px}
-  .summary{grid-template-columns:1fr;gap:10px}
-  .grid{grid-template-columns:1fr}
-  .form-grid{grid-template-columns:1fr}
-  .field.full{grid-column:auto}
-  .summary-value{font-size:24px}
-  .header-inner{padding:14px 16px}
-  h1{font-size:21px}
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <title>簡易記帳</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "PingFang TC",
+        "Noto Sans TC",
+        "Microsoft JhengHei",
+        sans-serif;
+      background: #f5f6f8;
+      color: #333;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px 15px 50px;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 5px 0 20px;
+      font-size: 28px;
+    }
+
+    h2 {
+      margin: 0 0 15px;
+      font-size: 20px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 16px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.06);
+    }
+
+    /* 月份切換 */
+    .month-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .month-title {
+      flex: 1;
+      text-align: center;
+      font-size: 21px;
+      font-weight: bold;
+    }
+
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-size: 15px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .month-btn {
+      background: #eeeeee;
+      min-width: 65px;
+    }
+
+    .month-btn:active,
+    button:active {
+      transform: scale(0.97);
+    }
+
+    /* 統計摘要 */
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .summary-item {
+      padding: 16px 10px;
+      border-radius: 14px;
+      text-align: center;
+      background: #f7f7f7;
+    }
+
+    .summary-label {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 8px;
+    }
+
+    .summary-value {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .income-value {
+      color: #198754;
+    }
+
+    .expense-value {
+      color: #dc3545;
+    }
+
+    .balance-value {
+      color: #333;
+    }
+
+    /* 表單 */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      font-size: 14px;
+      margin-bottom: 6px;
+      color: #555;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 16px;
+      background: #fff;
+      outline: none;
+      font-family: inherit;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #888;
+    }
+
+    textarea {
+      min-height: 75px;
+      resize: vertical;
+    }
+
+    .type-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .type-btn {
+      flex: 1;
+      background: #eee;
+    }
+
+    .type-btn.active-income {
+      background: #d9f3e4;
+      color: #198754;
+      font-weight: bold;
+    }
+
+    .type-btn.active-expense {
+      background: #fde0e3;
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .submit-btn {
+      flex: 1;
+      background: #333;
+      color: white;
+      font-weight: bold;
+    }
+
+    .cancel-btn {
+      background: #eee;
+      display: none;
+    }
+
+    /* 分類管理 */
+    .category-add {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    .category-add input {
+      flex: 1;
+    }
+
+    .add-category-btn {
+      background: #333;
+      color: white;
+      white-space: nowrap;
+    }
+
+    .category-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .category-tag {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f1f1;
+      border-radius: 20px;
+      padding: 7px 10px 7px 13px;
+      font-size: 14px;
+    }
+
+    .delete-category-btn {
+      width: 22px;
+      height: 22px;
+      padding: 0;
+      border-radius: 50%;
+      background: #ddd;
+      color: #555;
+      font-size: 14px;
+      line-height: 22px;
+    }
+
+    .category-hint {
+      color: #888;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+
+    /* 分類統計 */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .stat-box {
+      border: 1px solid #eee;
+      border-radius: 14px;
+      padding: 15px;
+    }
+
+    .stat-box h3 {
+      margin: 0 0 15px;
+      font-size: 17px;
+    }
+
+    .stat-total {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 15px;
+    }
+
+    .expense-total {
+      color: #dc3545;
+    }
+
+    .income-total {
+      color: #198754;
+    }
+
+    .category-stat {
+      margin-bottom: 14px;
+    }
+
+    .category-stat:last-child {
+      margin-bottom: 0;
+    }
+
+    .category-stat-header {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px;
+      font-size: 14px;
+    }
+
+    .category-stat-name {
+      font-weight: 500;
+    }
+
+    .category-stat-money {
+      font-weight: bold;
+    }
+
+    .bar-bg {
+      height: 8px;
+      border-radius: 10px;
+      background: #eeeeee;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      border-radius: 10px;
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .expense-bar {
+      background: #dc3545;
+    }
+
+    .income-bar {
+      background: #198754;
+    }
+
+    .category-percent {
+      font-size: 12px;
+      color: #888;
+      margin-top: 4px;
+    }
+
+    .no-data {
+      text-align: center;
+      color: #999;
+      padding: 20px 0;
+      font-size: 14px;
+    }
+
+    /* 紀錄表格 */
+    .table-wrapper {
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 650px;
+    }
+
+    th,
+    td {
+      padding: 11px 8px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+
+    th {
+      color: #666;
+      font-weight: 600;
+      background: #fafafa;
+    }
+
+    .income-text {
+      color: #198754;
+      font-weight: bold;
+    }
+
+    .expense-text {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .edit-btn {
+      background: #eee;
+      padding: 7px 10px;
+      font-size: 13px;
+    }
+
+    .delete-btn {
+      background: #fde0e3;
+      color: #c82333;
+      padding: 7px 10px;
+      font-size: 13px;
+    }
+
+    .empty-record {
+      text-align: center;
+      color: #999;
+      padding: 30px 10px;
+    }
+
+    /* 手機版 */
+    @media (max-width: 650px) {
+      .container {
+        padding: 15px 10px 40px;
+      }
+
+      h1 {
+        font-size: 25px;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .summary-item {
+        padding: 13px;
+      }
+
+      .summary-value {
+        font-size: 20px;
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-group.full {
+        grid-column: auto;
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .category-add {
+        flex-direction: column;
+      }
+
+      .add-category-btn {
+        width: 100%;
+      }
+
+      .month-title {
+        font-size: 18px;
+      }
+
+      .month-btn {
+        min-width: 55px;
+        padding: 9px 10px;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<header>
-  <div class="header-inner">
-    <div>
-      <h1>簡易記帳</h1>
-      <div class="subtitle">輕鬆記錄每一筆收入與支出</div>
+
+<div class="container">
+
+  <h1>💰 簡易記帳</h1>
+
+  <!-- 月份 -->
+  <div class="card">
+    <div class="month-nav">
+      <button id="prevMonth" class="month-btn">‹ 上月</button>
+
+      <div id="monthTitle" class="month-title">
+        2026 年 9 月
+      </div>
+
+      <button id="nextMonth" class="month-btn">下月 ›</button>
+    </div>
+
+    <!-- 本月摘要 -->
+    <div class="summary">
+      <div class="summary-item">
+        <div class="summary-label">本月收入</div>
+        <div id="monthlyIncome" class="summary-value income-value">$0</div>
+      </div>
+
+      <div class="summary-item">
+        <div class="summary-label">本月支出</div>
+        <div id="monthlyExpense" class="summary-value expense-value">$0</div>
+      </div>
+
+      <div class="summary-item">
+        <div class="summary-label">本月結餘</div>
+        <div id="monthlyBalance" class="summary-value balance-value">$0</div>
+      </div>
     </div>
   </div>
-</header>
 
-<main class="container">
-  <div class="month-bar">
-    <button onclick="changeMonth(-1)" aria-label="上個月">‹</button>
-    <div class="month-title" id="monthTitle"></div>
-    <button onclick="changeMonth(1)" aria-label="下個月">›</button>
+  <!-- 新增記帳 -->
+  <div class="card">
+    <h2 id="formTitle">新增紀錄</h2>
+
+    <form id="recordForm">
+
+      <div class="form-grid">
+
+        <!-- 日期 -->
+        <div class="form-group">
+          <label for="date">日期</label>
+          <input type="date" id="date" required>
+        </div>
+
+        <!-- 時間 -->
+        <div class="form-group">
+          <label for="time">時間</label>
+          <input type="time" id="time" required>
+        </div>
+
+        <!-- 類型 -->
+        <div class="form-group full">
+          <label>類型</label>
+
+          <div class="type-buttons">
+            <button
+              type="button"
+              id="incomeBtn"
+              class="type-btn"
+            >
+              收入
+            </button>
+
+            <button
+              type="button"
+              id="expenseBtn"
+              class="type-btn active-expense"
+            >
+              支出
+            </button>
+          </div>
+
+          <input type="hidden" id="type" value="expense">
+        </div>
+
+        <!-- 項目 -->
+        <div class="form-group">
+          <label for="item">項目</label>
+          <input
+            type="text"
+            id="item"
+            placeholder="例如：午餐、薪水"
+            required
+          >
+        </div>
+
+        <!-- 金額 -->
+        <div class="form-group">
+          <label for="amount">金額</label>
+          <input
+            type="number"
+            id="amount"
+            placeholder="請輸入金額"
+            min="0"
+            step="1"
+            required
+          >
+        </div>
+
+        <!-- 分類 -->
+        <div class="form-group">
+          <label for="category">分類</label>
+
+          <select id="category" required>
+          </select>
+        </div>
+
+        <!-- 備註 -->
+        <div class="form-group">
+          <label for="note">備註</label>
+          <input
+            type="text"
+            id="note"
+            placeholder="備註（可不填）"
+          >
+        </div>
+
+      </div>
+
+      <div class="form-actions">
+
+        <button
+          type="submit"
+          id="submitBtn"
+          class="submit-btn"
+        >
+          新增紀錄
+        </button>
+
+        <button
+          type="button"
+          id="cancelBtn"
+          class="cancel-btn"
+        >
+          取消編輯
+        </button>
+
+      </div>
+
+    </form>
   </div>
 
-  <section class="summary">
-    <div class="card"><div class="summary-label">本月收入</div><div class="summary-value income" id="incomeTotal">$0</div></div>
-    <div class="card"><div class="summary-label">本月支出</div><div class="summary-value expense" id="expenseTotal">$0</div></div>
-    <div class="card"><div class="summary-label">本月餘額</div><div class="summary-value balance" id="balanceTotal">$0</div></div>
-  </section>
+  <!-- 分類管理 -->
+  <div class="card">
 
-  <section class="grid">
-    <div class="card">
-      <h2 class="section-title" id="formTitle">新增記帳</h2>
-      <form id="recordForm">
-        <div class="form-grid">
-          <div class="field">
-            <label>日期</label>
-            <input type="date" id="date" required>
-          </div>
-          <div class="field">
-            <label>類型</label>
-            <select id="type">
-              <option value="expense">支出</option>
-              <option value="income">收入</option>
-            </select>
-          </div>
-          <div class="field">
-            <label>項目名稱</label>
-            <input id="item" placeholder="例如：午餐" required>
-          </div>
-          <div class="field">
-            <label>金額</label>
-            <input type="number" id="amount" min="0" step="1" placeholder="0" required>
-          </div>
-          <div class="field full">
-            <label>分類</label>
-            <select id="category">
-              <option>餐飲</option>
-              <option>交通</option>
-              <option>購物</option>
-              <option>生活</option>
-              <option>娛樂</option>
-              <option>醫療</option>
-              <option>薪資</option>
-              <option>獎金</option>
-              <option>其他</option>
-            </select>
-          </div>
-          <div class="field full">
-            <label>備註（可不填）</label>
-            <textarea id="note" placeholder="輸入備註..."></textarea>
-          </div>
-        </div>
-        <div class="actions">
-          <button class="primary" type="submit" id="submitBtn">新增紀錄</button>
-          <button class="secondary" type="button" onclick="resetForm()">取消</button>
-        </div>
-      </form>
+    <h2>📂 分類管理</h2>
+
+    <div class="category-add">
+
+      <input
+        type="text"
+        id="newCategory"
+        placeholder="輸入新分類，例如：寵物"
+        maxlength="20"
+      >
+
+      <button
+        type="button"
+        id="addCategoryBtn"
+        class="add-category-btn"
+      >
+        ＋ 新增分類
+      </button>
+
     </div>
 
-    <div class="card">
-      <h2 class="section-title">本月支出分類</h2>
-      <div class="stats-list" id="categoryStats"></div>
-    </div>
-  </section>
+    <div id="categoryList" class="category-list"></div>
 
-  <section class="card records">
-    <h2 class="section-title">記帳紀錄</h2>
-    <div class="table-wrap">
+    <div class="category-hint">
+      ※ 已被記帳紀錄使用中的分類，不能直接刪除。
+    </div>
+
+  </div>
+
+  <!-- 分類統計 -->
+  <div class="card">
+
+    <h2>📊 本月分類統計</h2>
+
+    <div class="stats-grid">
+
+      <!-- 支出 -->
+      <div class="stat-box">
+
+        <h3>🔴 支出分類</h3>
+
+        <div
+          id="expenseCategoryTotal"
+          class="stat-total expense-total"
+        >
+          $0
+        </div>
+
+        <div id="expenseCategoryStats">
+          <div class="no-data">
+            本月還沒有支出紀錄
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 收入 -->
+      <div class="stat-box">
+
+        <h3>🟢 收入分類</h3>
+
+        <div
+          id="incomeCategoryTotal"
+          class="stat-total income-total"
+        >
+          $0
+        </div>
+
+        <div id="incomeCategoryStats">
+          <div class="no-data">
+            本月還沒有收入紀錄
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- 紀錄 -->
+  <div class="card">
+
+    <h2>📝 本月紀錄</h2>
+
+    <div class="table-wrapper">
+
       <table>
+
         <thead>
           <tr>
-            <th>日期</th><th>類型</th><th>項目</th><th>分類</th><th>金額</th><th>備註</th><th>操作</th>
+            <th>日期</th>
+            <th>類型</th>
+            <th>項目</th>
+            <th>分類</th>
+            <th>金額</th>
+            <th>備註</th>
+            <th>操作</th>
           </tr>
         </thead>
-        <tbody id="recordsBody"></tbody>
+
+        <tbody id="recordsBody">
+        </tbody>
+
       </table>
+
     </div>
-    <div class="footer-note">資料儲存在目前瀏覽器中，不會因重新整理而消失。</div>
-  </section>
-</main>
+
+  </div>
+
+</div>
+
 
 <script>
-const STORAGE_KEY = 'simple_accounting_records_v1';
-let currentMonth = new Date();
-currentMonth.setDate(1);
-let editingId = null;
 
-function getRecords(){
-  try{return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []}
-  catch(e){return []}
-}
-function saveRecords(records){localStorage.setItem(STORAGE_KEY, JSON.stringify(records))}
-function pad(n){return String(n).padStart(2,'0')}
-function monthKey(date=currentMonth){return `${date.getFullYear()}-${pad(date.getMonth()+1)}`}
-function formatMoney(n){return new Intl.NumberFormat('zh-TW',{style:'currency',currency:'TWD',maximumFractionDigits:0}).format(n)}
+  /* =========================
+     儲存設定
+  ========================= */
 
-function render(){
-  document.getElementById('monthTitle').textContent = `${currentMonth.getFullYear()} 年 ${currentMonth.getMonth()+1} 月`;
-  const records = getRecords().filter(r=>r.date.startsWith(monthKey()));
-  const income = records.filter(r=>r.type==='income').reduce((s,r)=>s+Number(r.amount),0);
-  const expense = records.filter(r=>r.type==='expense').reduce((s,r)=>s+Number(r.amount),0);
-  document.getElementById('incomeTotal').textContent = formatMoney(income);
-  document.getElementById('expenseTotal').textContent = formatMoney(expense);
-  document.getElementById('balanceTotal').textContent = formatMoney(income-expense);
+  const STORAGE_KEY = "simple_accounting_records_v1";
 
-  const body=document.getElementById('recordsBody');
-  body.innerHTML='';
-  if(!records.length){
-    body.innerHTML='<tr><td colspan="7" class="empty">這個月還沒有記帳紀錄</td></tr>';
-  } else {
-    records.sort((a,b)=>b.date.localeCompare(a.date)).forEach(r=>{
-      const tr=document.createElement('tr');
-      tr.innerHTML=`
-        <td>${escapeHtml(r.date)}</td>
-        <td><span class="badge ${r.type==='income'?'in':'out'}">${r.type==='income'?'收入':'支出'}</span></td>
-        <td>${escapeHtml(r.item)}</td>
-        <td>${escapeHtml(r.category)}</td>
-        <td class="${r.type==='income'?'money-in':'money-out'}">${r.type==='income'?'+':'-'}${formatMoney(r.amount)}</td>
-        <td>${escapeHtml(r.note||'')}</td>
-        <td><div class="row-actions">
-          <button class="small-btn" onclick="editRecord('${r.id}')">編輯</button>
-          <button class="small-btn" onclick="deleteRecord('${r.id}')">刪除</button>
-        </div></td>`;
-      body.appendChild(tr);
-    });
+  const CATEGORY_STORAGE_KEY =
+    "simple_accounting_categories_v1";
+
+
+  /* =========================
+     預設分類
+  ========================= */
+
+  const DEFAULT_CATEGORIES = [
+    "餐飲",
+    "交通",
+    "購物",
+    "生活",
+    "娛樂",
+    "醫療",
+    "薪資",
+    "獎金",
+    "其他"
+  ];
+
+
+  /* =========================
+     目前月份
+  ========================= */
+
+  let currentMonth = new Date();
+
+  currentMonth.setDate(1);
+
+
+  /* =========================
+     編輯中的紀錄 ID
+  ========================= */
+
+  let editingId = null;
+
+
+  /* =========================
+     DOM
+  ========================= */
+
+  const recordForm =
+    document.getElementById("recordForm");
+
+  const dateInput =
+    document.getElementById("date");
+
+  const timeInput =
+    document.getElementById("time");
+
+  const typeInput =
+    document.getElementById("type");
+
+  const incomeBtn =
+    document.getElementById("incomeBtn");
+
+  const expenseBtn =
+    document.getElementById("expenseBtn");
+
+  const itemInput =
+    document.getElementById("item");
+
+  const amountInput =
+    document.getElementById("amount");
+
+  const categoryInput =
+    document.getElementById("category");
+
+  const noteInput =
+    document.getElementById("note");
+
+  const submitBtn =
+    document.getElementById("submitBtn");
+
+  const cancelBtn =
+    document.getElementById("cancelBtn");
+
+  const formTitle =
+    document.getElementById("formTitle");
+
+  const recordsBody =
+    document.getElementById("recordsBody");
+
+  const monthTitle =
+    document.getElementById("monthTitle");
+
+  const monthlyIncome =
+    document.getElementById("monthlyIncome");
+
+  const monthlyExpense =
+    document.getElementById("monthlyExpense");
+
+  const monthlyBalance =
+    document.getElementById("monthlyBalance");
+
+  const expenseCategoryStats =
+    document.getElementById("expenseCategoryStats");
+
+  const incomeCategoryStats =
+    document.getElementById("incomeCategoryStats");
+
+  const expenseCategoryTotal =
+    document.getElementById("expenseCategoryTotal");
+
+  const incomeCategoryTotal =
+    document.getElementById("incomeCategoryTotal");
+
+  const categoryList =
+    document.getElementById("categoryList");
+
+  const newCategoryInput =
+    document.getElementById("newCategory");
+
+  const addCategoryBtn =
+    document.getElementById("addCategoryBtn");
+
+
+  /* =========================
+     取得紀錄
+  ========================= */
+
+  function getRecords() {
+
+    try {
+
+      const data =
+        localStorage.getItem(STORAGE_KEY);
+
+      if (!data) {
+        return [];
+      }
+
+      const records = JSON.parse(data);
+
+      return Array.isArray(records)
+        ? records
+        : [];
+
+    } catch (error) {
+
+      console.error("讀取紀錄失敗", error);
+
+      return [];
+    }
   }
 
-  const expenses=records.filter(r=>r.type==='expense');
-  const groups={};
-  expenses.forEach(r=>groups[r.category]=(groups[r.category]||0)+Number(r.amount));
-  const stats=document.getElementById('categoryStats');
-  stats.innerHTML='';
-  const entries=Object.entries(groups).sort((a,b)=>b[1]-a[1]);
-  if(!entries.length){stats.innerHTML='<div class="empty">本月還沒有支出資料</div>'}
-  else{
-    const max=Math.max(...entries.map(x=>x[1]));
-    entries.forEach(([cat,value])=>{
-      const row=document.createElement('div');
-      row.className='stat-row';
-      row.innerHTML=`<div>${escapeHtml(cat)}</div><div class="bar"><div style="width:${Math.max(4,value/max*100)}%"></div></div><strong>${formatMoney(value)}</strong>`;
-      stats.appendChild(row);
-    });
+
+  /* =========================
+     儲存紀錄
+  ========================= */
+
+  function saveRecords(records) {
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(records)
+    );
   }
-}
 
-function escapeHtml(text){
-  return String(text).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-}
 
-document.getElementById('recordForm').addEventListener('submit',e=>{
-  e.preventDefault();
-  const records=getRecords();
-  const data={
-    id:editingId || String(Date.now()),
-    date:document.getElementById('date').value,
-    type:document.getElementById('type').value,
-    item:document.getElementById('item').value.trim(),
-    amount:Number(document.getElementById('amount').value),
-    category:document.getElementById('category').value,
-    note:document.getElementById('note').value.trim()
-  };
-  if(editingId){
-    const i=records.findIndex(r=>r.id===editingId);
-    records[i]=data;
-  }else records.push(data);
-  saveRecords(records);
-  currentMonth=new Date(data.date+'T00:00:00'); currentMonth.setDate(1);
+  /* =========================
+     取得分類
+  ========================= */
+
+  function getCategories() {
+
+    let categories = [];
+
+    try {
+
+      const data =
+        localStorage.getItem(
+          CATEGORY_STORAGE_KEY
+        );
+
+      if (data) {
+        categories = JSON.parse(data);
+      }
+
+    } catch (error) {
+
+      categories = [];
+    }
+
+
+    if (
+      !Array.isArray(categories) ||
+      categories.length === 0
+    ) {
+
+      categories =
+        [...DEFAULT_CATEGORIES];
+    }
+
+
+    /*
+      把舊紀錄中存在、
+      但分類清單沒有的分類補回來
+    */
+
+    const records = getRecords();
+
+    records.forEach(record => {
+
+      if (
+        record.category &&
+        !categories.includes(record.category)
+      ) {
+
+        categories.push(record.category);
+      }
+
+    });
+
+
+    saveCategories(categories);
+
+    return categories;
+  }
+
+
+  /* =========================
+     儲存分類
+  ========================= */
+
+  function saveCategories(categories) {
+
+    localStorage.setItem(
+      CATEGORY_STORAGE_KEY,
+      JSON.stringify(categories)
+    );
+  }
+
+
+  /* =========================
+     日期格式
+  ========================= */
+
+  function pad(number) {
+
+    return String(number).padStart(2, "0");
+  }
+
+
+  function getTodayDate() {
+
+    const now = new Date();
+
+    return (
+      now.getFullYear() +
+      "-" +
+      pad(now.getMonth() + 1) +
+      "-" +
+      pad(now.getDate())
+    );
+  }
+
+
+  function getCurrentTime() {
+
+    const now = new Date();
+
+    return (
+      pad(now.getHours()) +
+      ":" +
+      pad(now.getMinutes())
+    );
+  }
+
+
+  /* =========================
+     月份 Key
+  ========================= */
+
+  function monthKey(date) {
+
+    return (
+      date.getFullYear() +
+      "-" +
+      pad(date.getMonth() + 1)
+    );
+  }
+
+
+  /* =========================
+     金額格式
+  ========================= */
+
+  function formatMoney(number) {
+
+    return "$" +
+      Number(number || 0)
+        .toLocaleString("zh-TW");
+  }
+
+
+  /* =========================
+     HTML 安全處理
+  ========================= */
+
+  function escapeHtml(text) {
+
+    if (text === null || text === undefined) {
+      return "";
+    }
+
+    return String(text)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
+
+  /* =========================
+     顯示月份
+  ========================= */
+
+  function renderMonthTitle() {
+
+    monthTitle.textContent =
+      currentMonth.getFullYear() +
+      " 年 " +
+      (currentMonth.getMonth() + 1) +
+      " 月";
+  }
+
+
+  /* =========================
+     分類下拉選單
+  ========================= */
+
+  function renderCategorySelect(
+    selectedCategory = ""
+  ) {
+
+    const categories =
+      getCategories();
+
+    categoryInput.innerHTML = "";
+
+    categories.forEach(category => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = category;
+
+      option.textContent = category;
+
+      categoryInput.appendChild(option);
+
+    });
+
+
+    if (
+      selectedCategory &&
+      categories.includes(selectedCategory)
+    ) {
+
+      categoryInput.value =
+        selectedCategory;
+
+    }
+
+  }
+
+
+  /* =========================
+     分類管理畫面
+  ========================= */
+
+  function renderCategoryManagement() {
+
+    const categories =
+      getCategories();
+
+    categoryList.innerHTML = "";
+
+    categories.forEach(category => {
+
+      const tag =
+        document.createElement("div");
+
+      tag.className =
+        "category-tag";
+
+      const name =
+        document.createElement("span");
+
+      name.textContent =
+        category;
+
+
+      const deleteButton =
+        document.createElement("button");
+
+      deleteButton.type = "button";
+
+      deleteButton.className =
+        "delete-category-btn";
+
+      deleteButton.textContent = "×";
+
+      deleteButton.dataset.category =
+        category;
+
+
+      tag.appendChild(name);
+
+      tag.appendChild(deleteButton);
+
+      categoryList.appendChild(tag);
+
+    });
+
+  }
+
+
+  /* =========================
+     新增分類
+  ========================= */
+
+  addCategoryBtn.addEventListener(
+    "click",
+    function () {
+
+      const newCategory =
+        newCategoryInput.value.trim();
+
+
+      if (!newCategory) {
+
+        alert("請輸入分類名稱。");
+
+        newCategoryInput.focus();
+
+        return;
+      }
+
+
+      const categories =
+        getCategories();
+
+
+      if (
+        categories.includes(newCategory)
+      ) {
+
+        alert("這個分類已經存在。");
+
+        newCategoryInput.focus();
+
+        return;
+      }
+
+
+      categories.push(newCategory);
+
+      saveCategories(categories);
+
+
+      newCategoryInput.value = "";
+
+
+      renderCategorySelect();
+
+      renderCategoryManagement();
+
+
+      categoryInput.value =
+        newCategory;
+
+
+      newCategoryInput.focus();
+
+    }
+  );
+
+
+  /* =========================
+     刪除分類
+  ========================= */
+
+  categoryList.addEventListener(
+    "click",
+    function (event) {
+
+      const button =
+        event.target.closest(
+          ".delete-category-btn"
+        );
+
+
+      if (!button) {
+        return;
+      }
+
+
+      const category =
+        button.dataset.category;
+
+
+      const records =
+        getRecords();
+
+
+      const isUsed =
+        records.some(
+          record =>
+            record.category === category
+        );
+
+
+      if (isUsed) {
+
+        alert(
+          "這個分類已經有記帳紀錄使用中，不能刪除。\n\n" +
+          "如果不想使用，可以新增一個其他分類。"
+        );
+
+        return;
+      }
+
+
+      if (getCategories().length <= 1) {
+
+        alert(
+          "至少要保留一個分類。"
+        );
+
+        return;
+      }
+
+
+      const confirmed =
+        confirm(
+          "確定要刪除「" +
+          category +
+          "」分類嗎？"
+        );
+
+
+      if (!confirmed) {
+        return;
+      }
+
+
+      const categories =
+        getCategories()
+          .filter(
+            item => item !== category
+          );
+
+
+      saveCategories(categories);
+
+
+      renderCategorySelect();
+
+      renderCategoryManagement();
+
+    }
+  );
+
+
+  /* =========================
+     類型按鈕
+  ========================= */
+
+  incomeBtn.addEventListener(
+    "click",
+    function () {
+
+      typeInput.value = "income";
+
+      incomeBtn.classList.add(
+        "active-income"
+      );
+
+      incomeBtn.classList.remove(
+        "active-expense"
+      );
+
+      expenseBtn.classList.remove(
+        "active-expense"
+      );
+
+    }
+  );
+
+
+  expenseBtn.addEventListener(
+    "click",
+    function () {
+
+      typeInput.value = "expense";
+
+      expenseBtn.classList.add(
+        "active-expense"
+      );
+
+      expenseBtn.classList.remove(
+        "active-income"
+      );
+
+      incomeBtn.classList.remove(
+        "active-income"
+      );
+
+    }
+  );
+
+
+  /* =========================
+     Render
+  ========================= */
+
+  function render() {
+
+    renderMonthTitle();
+
+    const allRecords =
+      getRecords();
+
+
+    const key =
+      monthKey(currentMonth);
+
+
+    const records =
+      allRecords
+        .filter(record => {
+
+          return (
+            record.date &&
+            record.date.substring(0, 7) === key
+          );
+
+        })
+        .sort((a, b) => {
+
+          const dateA =
+            (a.date || "") +
+            " " +
+            (a.time || "");
+
+          const dateB =
+            (b.date || "") +
+            " " +
+            (b.time || "");
+
+          return dateB.localeCompare(dateA);
+
+        });
+
+
+    let income = 0;
+
+    let expense = 0;
+
+
+    records.forEach(record => {
+
+      const amount =
+        Number(record.amount) || 0;
+
+
+      if (record.type === "income") {
+
+        income += amount;
+
+      } else {
+
+        expense += amount;
+
+      }
+
+    });
+
+
+    monthlyIncome.textContent =
+      formatMoney(income);
+
+    monthlyExpense.textContent =
+      formatMoney(expense);
+
+    monthlyBalance.textContent =
+      formatMoney(income - expense);
+
+
+    renderRecords(records);
+
+    renderCategoryStats(records);
+
+    renderCategoryManagement();
+
+    renderCategorySelect(
+      categoryInput.value
+    );
+
+  }
+
+
+  /* =========================
+     顯示紀錄
+  ========================= */
+
+  function renderRecords(records) {
+
+    recordsBody.innerHTML = "";
+
+
+    if (records.length === 0) {
+
+      recordsBody.innerHTML = `
+        <tr>
+          <td
+            colspan="7"
+            class="empty-record"
+          >
+            本月還沒有記帳紀錄
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+
+    records.forEach(record => {
+
+      const tr =
+        document.createElement("tr");
+
+
+      const typeText =
+        record.type === "income"
+          ? "收入"
+          : "支出";
+
+
+      const amountClass =
+        record.type === "income"
+          ? "income-text"
+          : "expense-text";
+
+
+      const amountSign =
+        record.type === "income"
+          ? "+"
+          : "-";
+
+
+      tr.innerHTML = `
+
+        <td>
+          ${escapeHtml(record.date || "")}
+          <br>
+          <small>
+            ${escapeHtml(record.time || "")}
+          </small>
+        </td>
+
+        <td>
+          ${typeText}
+        </td>
+
+        <td>
+          ${escapeHtml(record.item || "")}
+        </td>
+
+        <td>
+          ${escapeHtml(record.category || "")}
+        </td>
+
+        <td class="${amountClass}">
+          ${amountSign}${formatMoney(record.amount)}
+        </td>
+
+        <td>
+          ${escapeHtml(record.note || "")}
+        </td>
+
+        <td>
+          <div class="action-buttons">
+
+            <button
+              type="button"
+              class="edit-btn"
+              data-id="${record.id}"
+            >
+              編輯
+            </button>
+
+            <button
+              type="button"
+              class="delete-btn"
+              data-id="${record.id}"
+            >
+              刪除
+            </button>
+
+          </div>
+        </td>
+
+      `;
+
+
+      recordsBody.appendChild(tr);
+
+    });
+
+  }
+
+
+  /* =========================
+     分類統計
+  ========================= */
+
+  function renderCategoryStats(records) {
+
+    renderCategoryGroup(
+      records,
+      "expense",
+      expenseCategoryStats,
+      expenseCategoryTotal,
+      "expense"
+    );
+
+
+    renderCategoryGroup(
+      records,
+      "income",
+      incomeCategoryStats,
+      incomeCategoryTotal,
+      "income"
+    );
+
+  }
+
+
+  function renderCategoryGroup(
+    records,
+    type,
+    container,
+    totalElement,
+    barType
+  ) {
+
+    const grouped = {};
+
+
+    records
+      .filter(record => record.type === type)
+      .forEach(record => {
+
+        const category =
+          record.category ||
+          "其他";
+
+
+        if (!grouped[category]) {
+
+          grouped[category] = 0;
+
+        }
+
+
+        grouped[category] +=
+          Number(record.amount) || 0;
+
+      });
+
+
+    const entries =
+      Object.entries(grouped)
+        .sort((a, b) => b[1] - a[1]);
+
+
+    const total =
+      entries.reduce(
+        (sum, item) => sum + item[1],
+        0
+      );
+
+
+    totalElement.textContent =
+      formatMoney(total);
+
+
+    container.innerHTML = "";
+
+
+    if (entries.length === 0) {
+
+      container.innerHTML = `
+        <div class="no-data">
+          ${
+            type === "expense"
+              ? "本月還沒有支出紀錄"
+              : "本月還沒有收入紀錄"
+          }
+        </div>
+      `;
+
+      return;
+    }
+
+
+    const maxAmount =
+      entries[0][1];
+
+
+    entries.forEach(
+      ([category, amount]) => {
+
+        const percentage =
+          total > 0
+            ? (amount / total) * 100
+            : 0;
+
+
+        const width =
+          maxAmount > 0
+            ? (amount / maxAmount) * 100
+            : 0;
+
+
+        const item =
+          document.createElement("div");
+
+        item.className =
+          "category-stat";
+
+
+        item.innerHTML = `
+
+          <div class="category-stat-header">
+
+            <span class="category-stat-name">
+              ${escapeHtml(category)}
+            </span>
+
+            <span class="category-stat-money">
+              ${formatMoney(amount)}
+            </span>
+
+          </div>
+
+
+          <div class="bar-bg">
+
+            <div
+              class="bar ${barType}-bar"
+              style="width:${width}%"
+            ></div>
+
+          </div>
+
+
+          <div class="category-percent">
+            ${percentage.toFixed(1)}%
+          </div>
+
+        `;
+
+
+        container.appendChild(item);
+
+      }
+    );
+
+  }
+
+
+  /* =========================
+     新增 / 編輯紀錄
+  ========================= */
+
+  recordForm.addEventListener(
+    "submit",
+    function (event) {
+
+      event.preventDefault();
+
+
+      const date =
+        dateInput.value;
+
+      const time =
+        timeInput.value;
+
+      const type =
+        typeInput.value;
+
+      const item =
+        itemInput.value.trim();
+
+      const amount =
+        Number(amountInput.value);
+
+      const category =
+        categoryInput.value;
+
+      const note =
+        noteInput.value.trim();
+
+
+      if (!date) {
+
+        alert("請選擇日期。");
+
+        return;
+      }
+
+
+      if (!time) {
+
+        alert("請選擇時間。");
+
+        return;
+      }
+
+
+      if (!item) {
+
+        alert("請輸入項目。");
+
+        itemInput.focus();
+
+        return;
+      }
+
+
+      if (
+        !Number.isFinite(amount) ||
+        amount <= 0
+      ) {
+
+        alert("請輸入正確的金額。");
+
+        amountInput.focus();
+
+        return;
+      }
+
+
+      if (!category) {
+
+        alert("請選擇分類。");
+
+        return;
+      }
+
+
+      const records =
+        getRecords();
+
+
+      if (editingId !== null) {
+
+        const index =
+          records.findIndex(
+            record =>
+              String(record.id) ===
+              String(editingId)
+          );
+
+
+        if (index !== -1) {
+
+          records[index] = {
+
+            ...records[index],
+
+            date,
+            time,
+            type,
+            item,
+            amount,
+            category,
+            note
+
+          };
+
+        }
+
+      } else {
+
+        const newRecord = {
+
+          id:
+            Date.now().toString() +
+            Math.random()
+              .toString(36)
+              .substring(2, 8),
+
+          date,
+          time,
+          type,
+          item,
+          amount,
+          category,
+          note
+
+        };
+
+
+        records.push(newRecord);
+
+      }
+
+
+      saveRecords(records);
+
+
+      resetForm();
+
+      render();
+
+    }
+  );
+
+
+  /* =========================
+     編輯 / 刪除按鈕
+  ========================= */
+
+  recordsBody.addEventListener(
+    "click",
+    function (event) {
+
+      const editButton =
+        event.target.closest(".edit-btn");
+
+
+      const deleteButton =
+        event.target.closest(".delete-btn");
+
+
+      if (editButton) {
+
+        editRecord(
+          editButton.dataset.id
+        );
+
+        return;
+      }
+
+
+      if (deleteButton) {
+
+        deleteRecord(
+          deleteButton.dataset.id
+        );
+
+      }
+
+    }
+  );
+
+
+  /* =========================
+     編輯紀錄
+  ========================= */
+
+  function editRecord(id) {
+
+    const records =
+      getRecords();
+
+
+    const record =
+      records.find(
+        item =>
+          String(item.id) === String(id)
+      );
+
+
+    if (!record) {
+
+      alert("找不到這筆紀錄。");
+
+      return;
+    }
+
+
+    editingId = id;
+
+
+    dateInput.value =
+      record.date || getTodayDate();
+
+
+    timeInput.value =
+      record.time || getCurrentTime();
+
+
+    typeInput.value =
+      record.type || "expense";
+
+
+    itemInput.value =
+      record.item || "";
+
+
+    amountInput.value =
+      record.amount || "";
+
+
+    renderCategorySelect(
+      record.category || ""
+    );
+
+
+    categoryInput.value =
+      record.category || "";
+
+
+    noteInput.value =
+      record.note || "";
+
+
+    if (record.type === "income") {
+
+      incomeBtn.classList.add(
+        "active-income"
+      );
+
+      incomeBtn.classList.remove(
+        "active-expense"
+      );
+
+      expenseBtn.classList.remove(
+        "active-expense"
+      );
+
+    } else {
+
+      expenseBtn.classList.add(
+        "active-expense"
+      );
+
+      incomeBtn.classList.remove(
+        "active-income"
+      );
+
+    }
+
+
+    formTitle.textContent =
+      "編輯紀錄";
+
+
+    submitBtn.textContent =
+      "儲存修改";
+
+
+    cancelBtn.style.display =
+      "block";
+
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+
+  }
+
+
+  /* =========================
+     刪除紀錄
+  ========================= */
+
+  function deleteRecord(id) {
+
+    const confirmed =
+      confirm(
+        "確定要刪除這筆記帳紀錄嗎？"
+      );
+
+
+    if (!confirmed) {
+      return;
+    }
+
+
+    const records =
+      getRecords();
+
+
+    const newRecords =
+      records.filter(
+        record =>
+          String(record.id) !==
+          String(id)
+      );
+
+
+    saveRecords(newRecords);
+
+
+    if (
+      String(editingId) ===
+      String(id)
+    ) {
+
+      resetForm();
+
+    }
+
+
+    render();
+
+  }
+
+
+  /* =========================
+     取消編輯
+  ========================= */
+
+  cancelBtn.addEventListener(
+    "click",
+    function () {
+
+      resetForm();
+
+    }
+  );
+
+
+  /* =========================
+     重設表單
+  ========================= */
+
+  function resetForm() {
+
+    editingId = null;
+
+
+    formTitle.textContent =
+      "新增紀錄";
+
+
+    submitBtn.textContent =
+      "新增紀錄";
+
+
+    cancelBtn.style.display =
+      "none";
+
+
+    recordForm.reset();
+
+
+    dateInput.value =
+      getTodayDate();
+
+
+    timeInput.value =
+      getCurrentTime();
+
+
+    typeInput.value =
+      "expense";
+
+
+    expenseBtn.classList.add(
+      "active-expense"
+    );
+
+    expenseBtn.classList.remove(
+      "active-income"
+    );
+
+    incomeBtn.classList.remove(
+      "active-income"
+    );
+
+
+    renderCategorySelect();
+
+  }
+
+
+  /* =========================
+     月份切換
+  ========================= */
+
+  document
+    .getElementById("prevMonth")
+    .addEventListener(
+      "click",
+      function () {
+
+        currentMonth.setMonth(
+          currentMonth.getMonth() - 1
+        );
+
+        render();
+
+      }
+    );
+
+
+  document
+    .getElementById("nextMonth")
+    .addEventListener(
+      "click",
+      function () {
+
+        currentMonth.setMonth(
+          currentMonth.getMonth() + 1
+        );
+
+        render();
+
+      }
+    );
+
+
+  /* =========================
+     Enter 新增分類
+  ========================= */
+
+  newCategoryInput.addEventListener(
+    "keydown",
+    function (event) {
+
+      if (event.key === "Enter") {
+
+        event.preventDefault();
+
+        addCategoryBtn.click();
+
+      }
+
+    }
+  );
+
+
+  /* =========================
+     啟動
+  ========================= */
+
   resetForm();
-  render();
-});
 
-function editRecord(id){
-  const r=getRecords().find(x=>x.id===id);
-  if(!r)return;
-  editingId=id;
-  ['date','type','item','amount','category','note'].forEach(k=>document.getElementById(k).value=r[k]);
-  document.getElementById('formTitle').textContent='編輯記帳';
-  document.getElementById('submitBtn').textContent='儲存修改';
-  window.scrollTo({top:0,behavior:'smooth'});
-}
-function deleteRecord(id){
-  if(!confirm('確定要刪除這筆紀錄嗎？'))return;
-  saveRecords(getRecords().filter(r=>r.id!==id));
-  if(editingId===id)resetForm();
   render();
-}
-function resetForm(){
-  editingId=null;
-  document.getElementById('recordForm').reset();
-  document.getElementById('date').value=new Date().toISOString().slice(0,10);
-  document.getElementById('formTitle').textContent='新增記帳';
-  document.getElementById('submitBtn').textContent='新增紀錄';
-}
-function changeMonth(delta){
-  currentMonth.setMonth(currentMonth.getMonth()+delta);
-  render();
-}
-resetForm();
-render();
+
 </script>
+
 </body>
 </html>
